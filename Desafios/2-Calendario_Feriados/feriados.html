@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio: Feriados Nacionais 2024</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0090f7; 
+            padding-top: 50px; 
+        
+        } 
+        .container { 
+            max-width: 800px; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 class="text-center mb-4">📅 Feriados Nacionais - 2024</h2>
+    
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Data</th>
+                <th>Feriado</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-feriados"></tbody>
+    </table>
+</div>
+
+<script>
+    // 1. Aguarda o carregamento completo do DOM
+    document.addEventListener("DOMContentLoaded", () => {
+        const corpoTabela = document.getElementById("tabela-feriados");
+
+        // 2. Faz o fetch para a BrasilAPI (Ano 2024)
+        fetch("https://brasilapi.com.br/api/feriados/v1/2024")
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao buscar dados da API");
+                return response.json();
+            })
+            .then(feriados => {
+                // 3. Limpa o corpo da tabela (caso necessário)
+                corpoTabela.innerHTML = "";
+
+                // 4. Percorre o Array de Objetos recebido
+                feriados.forEach(feriado => {
+                    // Formata a data de AAAA-MM-DD para DD/MM/AAAA
+                    const dataFormatada = feriado.date.split("-").reverse().join("/");
+
+                    // 5. Cria a linha (tr) e as células (td) dinamicamente
+                    const linha = `
+                        <tr>
+                            <td><strong>${dataFormatada}</strong></td>
+                            <td>${feriado.name}</td>
+                        </tr>
+                    `;
+
+                    // Adiciona a nova linha ao final do corpo da tabela
+                    corpoTabela.innerHTML += linha;
+                });
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+                corpoTabela.innerHTML = "<tr><td colspan='2' class='text-danger text-center'>Falha ao carregar os dados.</td></tr>";
+            });
+    });
+</script>
+
+</body>
+</html>

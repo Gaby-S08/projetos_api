@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐶 Gerador de Cães</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .cartao {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        /* Estilo para a imagem do cão */
+        #imagemCao {
+            width: 300px;
+            height: 300px;
+            object-fit: cover; /* Mantém a proporção da imagem sem a distorcer */
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #eaeaea; /* Fundo enquanto a imagem carrega */
+        }
+        /* Estilo para o botão */
+        #btnGerar {
+            background-color: #0505ce;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #btnGerar:hover {
+            background-color: #19008a;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cartao">
+        <h2>Gerador de Cães</h2>
+        
+        <img id="imagemCao" src="https://via.placeholder.com/300?text=%F0%9F%90%BE+Pata+de+C%C3%A3o" alt="Fotografia de um cão">
+        <br>
+        <button id="btnGerar">Gerar Cão 🐶</button>
+    </div>
+
+    <script>
+        // 1. Selecionamos os elementos com os quais vamos interagir
+        const botao = document.getElementById('btnGerar');
+        const imagem = document.getElementById('imagemCao');
+
+        // Função assíncrona para buscar os dados da API
+        async function gerarNovoCao() {
+            try {
+                // Alteramos o texto do botão para mostrar que está a carregar
+                botao.textContent = "A procurar cãozinho... 🐾";
+
+                // Missão 2: Utilizar a função fetch() para consultar o endereço
+                const resposta = await fetch('https://dog.ceo/api/breeds/image/random');
+                
+                // Convertemos a resposta para formato JSON
+                const dados = await resposta.json();
+
+                // Missão 3 & 4: Aceder à propriedade 'message' e alterar o atributo 'src' da tag <img>
+                imagem.src = dados.message;
+
+                // Devolvemos o texto original ao botão
+                botao.textContent = "Gerar Cão 🐶";
+
+            } catch (erro) {
+                console.error("Ops! Ocorreu um erro:", erro);
+                botao.textContent = "Erro! Tentar novamente";
+            }
+        }
+
+        // Adicionamos o evento de "click" ao botão para acionar a função
+        botao.addEventListener('click', gerarNovoCao);
+    </script>
+
+</body>
+</html>
